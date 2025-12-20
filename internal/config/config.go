@@ -14,6 +14,6 @@ func LoadConfig() Config {
 	godotenv.Load()
 
 	return Config{
-		RedisURL: os.Getenv("REDIS_URL")
+		RedisURL: os.Getenv("REDIS_URL"),
 	}
 }
