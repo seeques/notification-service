@@ -2,6 +2,10 @@ package main
 
 import (
 	"time"
+	"syscall"
+	"os"
+	"os/signal"
+	"context"
 
 	"github.com/rs/zerolog/log"
 	"github.com/seeques/notification-service/internal/queue"
@@ -30,10 +34,20 @@ func main() {
 	for i := 0; i < 10; i++ {
 		q.PushJob(&job)
 	}
-	log.Info().Interface("Job:", job).Msg("Job pushed")
+
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+
+	ctx, cancel := context.WithCancel(context.Background())
 
 	processor := worker.NewProcessor()
 	pool := worker.NewPool(5, q, processor)
 
-	pool.Start()
+	go func() {
+		<-sigs
+		log.Info().Msg("Shutdown signal received")
+		cancel()
+	}()
+
+	pool.Start(ctx)
 }
