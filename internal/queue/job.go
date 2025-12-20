@@ -16,16 +16,16 @@ type Job struct {
     CreatedAt time.Time `json:"created_at"`
 }
 
-func (rc *RedisClient) PushJob(job Job) {
+func (rc *RedisClient) PushJob(job *Job) {
 	jobJSON, _ := json.Marshal(job)
 	rc.RedisClient.LPush(context.Background(), "notifications:pending", jobJSON)
 }
 
-func (rc *RedisClient) PopJob(job Job) error {
+func (rc *RedisClient) PopJob(job *Job) (*Job, error) {
 	result, err := rc.RedisClient.BRPop(context.Background(), 0, "notifications:pending").Result()
 	if err != nil {
-		return err
+		return nil, err
 	}
 	json.Unmarshal([]byte(result[1]), &job)
-	return nil
+	return job, nil
 }
