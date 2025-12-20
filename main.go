@@ -12,7 +12,7 @@ import (
 func main() {
 	cfg := config.LoadConfig()
 
-	rc, err := queue.NewRedisClient(cfg)
+	q, err := queue.NewQueue(cfg)
 	if err != nil {
 		log.Fatal().Err(err).Msg("failed to create new redis client")
 	}
@@ -28,10 +28,10 @@ func main() {
 	}
 
 	for i := 0; i < 3; i++ {
-		rc.PushJob(&job)
+		q.PushJob(&job)
 	}
 
 	log.Info().Interface("Job:", job).Msg("Job pushed")
 
-	worker.Work(rc)
+	worker.Work(q)
 }

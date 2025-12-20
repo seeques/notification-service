@@ -5,11 +5,11 @@ import (
 	"github.com/seeques/notification-service/internal/config"
 )
 
-type RedisClient struct {
+type Queue struct {
 	RedisClient *redis.Client
 }
 
-func NewRedisClient(cfg config.Config) (*RedisClient, error) {
+func NewQueue(cfg config.Config) (*Queue, error) {
 	opt, err := redis.ParseURL(cfg.RedisURL)
 	if err != nil {
 		return nil, err
@@ -17,9 +17,9 @@ func NewRedisClient(cfg config.Config) (*RedisClient, error) {
 
 	client := redis.NewClient(opt)
 
-	rc := &RedisClient{
+	q := &Queue{
 		RedisClient: client,
 	}
 
-	return rc, nil
+	return q, nil
 }
