@@ -27,11 +27,13 @@ func main() {
 		CreatedAt: time.Now(),
 	}
 
-	for i := 0; i < 3; i++ {
+	for i := 0; i < 10; i++ {
 		q.PushJob(&job)
 	}
-
 	log.Info().Interface("Job:", job).Msg("Job pushed")
 
-	worker.Work(q)
+	processor := worker.NewProcessor()
+	pool := worker.NewPool(5, q, processor)
+
+	pool.Start()
 }
