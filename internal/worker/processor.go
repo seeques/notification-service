@@ -10,6 +10,10 @@ import (
 
 type LogProcessor struct {}
 
+func NewProcessor() *LogProcessor {
+	return &LogProcessor{}
+}
+
 type Processor interface {
 	Process(ctx context.Context, job *queue.Job)
 }
