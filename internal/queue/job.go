@@ -21,7 +21,8 @@ func (rc *RedisClient) PushJob(job *Job) {
 	rc.RedisClient.LPush(context.Background(), "notifications:pending", jobJSON)
 }
 
-func (rc *RedisClient) PopJob(job *Job) (*Job, error) {
+func (rc *RedisClient) PopJob() (*Job, error) {
+	var job *Job
 	result, err := rc.RedisClient.BRPop(context.Background(), 0, "notifications:pending").Result()
 	if err != nil {
 		return nil, err
