@@ -17,3 +17,21 @@ func (s *PostgresStorage) CreateTemp(ctx context.Context, temp *Template) error 
 
 	return err
 }
+
+func (s *PostgresStorage) GetTemp(ctx context.Context, name string) (*Template, error) {
+	query := `SELECT id, name, subject, body, created_at, updated_at
+	FROM templates
+	WHERE name = $1`
+
+	temp := Template{}
+
+	err := s.pool.QueryRow(ctx, query, name).Scan(
+		&temp.ID,
+		&temp.Name,
+		&temp.Subject,
+		&temp.Body,
+		&temp.CreatedAt,
+		&temp.UpdatedAt,
+	)
+	return &temp, err
+}
