@@ -8,6 +8,7 @@ import (
 
 type Config struct {
 	RedisURL string
+	DatabaseURL string
 }
 
 func LoadConfig() Config {
@@ -15,5 +16,6 @@ func LoadConfig() Config {
 
 	return Config{
 		RedisURL: os.Getenv("REDIS_URL"),
+		DatabaseURL: os.Getenv("DATABASE_URL"),
 	}
 }
