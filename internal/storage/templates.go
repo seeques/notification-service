@@ -35,3 +35,37 @@ func (s *PostgresStorage) GetTemp(ctx context.Context, name string) (*Template, 
 	)
 	return &temp, err
 }
+
+func (s *PostgresStorage) ListAllTemp(ctx context.Context) ([]Template, error) {
+	query := `SELECT id, name, subject, body, created_at, updated_at
+	FROM templates`
+
+	rows, err := s.pool.Query(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var templates []Template
+	for rows.Next() {
+		var temp Template
+		err := rows.Scan(
+			&temp.ID,
+			&temp.Name,
+			&temp.Subject,
+			&temp.Body,
+			&temp.CreatedAt,
+			&temp.UpdatedAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+		templates = append(templates, temp)
+	}
+
+	if err := rows.Err(); err != nil {
+        return nil, err
+    }
+
+	return templates, nil
+}
