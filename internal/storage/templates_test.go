@@ -88,3 +88,36 @@ func TestListAllTemp(t *testing.T) {
 		t.Error("ID does not match")
 	}
 }
+
+func TestUpdateTemp(t *testing.T) {
+	s := setupTestStorage(t)
+	ctx := context.Background()
+
+	template := &Template{
+		Name: "test",
+		Subject: "test_subject",
+		Body: "test_body",
+	}
+
+	err := s.CreateTemp(ctx, template)
+	if err != nil {
+		t.Fatalf("failed to create a template: %v", err)
+	}
+
+	name := "test_update"
+	subject := "test_subject_update"
+	body := "test_body_update"
+
+	tempUpd, err := s.UpdateTemp(ctx, name, subject, body, template.ID)
+	if err != nil {
+		t.Fatalf("template update failed: %v", err)
+	}
+
+	if tempUpd.ID != template.ID {
+		t.Error("ids mismatch")
+	}
+
+	if tempUpd.Name != "test_update" {
+		t.Error("incorrect name after update")
+	}
+}
