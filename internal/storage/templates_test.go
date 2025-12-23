@@ -121,3 +121,29 @@ func TestUpdateTemp(t *testing.T) {
 		t.Error("incorrect name after update")
 	}
 }
+
+func TestDeleteTemp(t *testing.T) {
+	s := setupTestStorage(t)
+	ctx := context.Background()
+
+	template := &Template{
+		Name: "test",
+		Subject: "test_subject",
+		Body: "test_body",
+	}
+
+	err := s.CreateTemp(ctx, template)
+	if err != nil {
+		t.Fatalf("failed to create a template: %v", err)
+	}
+
+	err = s.DeleteTemp(ctx, template.ID)
+	if err != nil {
+		t.Fatalf("failed to delete a template: %v", err)
+	}
+
+	temp, _ := s.GetTemp(ctx, template.Name)
+	if temp.Name != "" {
+		t.Error("template should be deleted")
+	}
+}

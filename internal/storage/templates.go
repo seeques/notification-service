@@ -2,6 +2,8 @@ package storage
 
 import (
 	"context"
+
+	"github.com/jackc/pgx"
 )
 
 func (s *PostgresStorage) CreateTemp(ctx context.Context, temp *Template) error {
@@ -92,4 +94,19 @@ func (s *PostgresStorage) UpdateTemp(ctx context.Context, name string, subject s
 	)
 
 	return &temp, err
+}
+
+func (s *PostgresStorage) DeleteTemp(ctx context.Context, tempID int) error {
+	sql := `DELETE FROM templates WHERE id = $1`
+
+	result, err := s.pool.Exec(ctx, sql, tempID)
+	if err != nil {
+		return err
+	}
+
+	if result.RowsAffected() == 0 {
+		return pgx.ErrNoRows
+	}
+
+	return nil
 }
