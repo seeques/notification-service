@@ -3,7 +3,7 @@ package storage
 import (
 	"context"
 
-	"github.com/jackc/pgx"
+	"github.com/jackc/pgx/v5"
 )
 
 func (s *PostgresStorage) CreateTemp(ctx context.Context, temp *Template) error {
