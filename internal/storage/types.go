@@ -8,17 +8,18 @@ type Template struct {
 	ID        int       `json:"id"`
 	Name      string    `json:"name"`
 	Subject   string    `json:"subject"`
-	Body      string    `"json:"body"`
+	Body      string    `json:"body"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
 }
 
 type Preference struct {
 	ID        int       `json:"id"`
-	UserID    int       `json:"userID"`
+	UserID    string    `json:"userID"`
 	Channel   string    `json:"channel"`
 	Enabled   bool      `json:"enabled"`
 	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }
 
 type Log struct {
