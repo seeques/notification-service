@@ -61,3 +61,30 @@ func TestGetTemp(t *testing.T) {
 		t.Error("creation time does not match")
 	}
 }
+
+func TestListAllTemp(t *testing.T) {
+	s := setupTestStorage(t)
+	ctx := context.Background()
+
+	template := &Template{
+		Name: "test",
+		Subject: "test_subject",
+		Body: "test_body",
+	}
+
+	err := s.CreateTemp(ctx, template)
+	if err != nil {
+		t.Fatalf("failed to create a template: %v", err)
+	}
+
+	templates, err := s.ListAllTemp(ctx)
+	if err != nil {
+		t.Fatalf("failed to retrieve templates: %v", err)
+	}
+
+	temp := templates[0]
+
+	if temp.ID != template.ID {
+		t.Error("ID does not match")
+	}
+}
