@@ -74,3 +74,38 @@ func TestGetPreference(t *testing.T) {
 		t.Error("channel should be enabled")
 	}
 }
+
+func TestIsChannelEnabled(t *testing.T) {
+	s := setupTestStorage(t)
+	ctx := context.Background()
+
+	userID := "abcUser"
+	channel := "email"
+	enabled := true
+
+	pref, err := s.SetPreference(ctx, userID, channel, enabled)
+	if err != nil {
+		t.Fatalf("failed to set a preference: %v", err)
+	}
+
+	isEnabled := s.IsChannelEnabled(ctx, pref.ID, userID, channel)
+
+	if isEnabled != enabled {
+		t.Error("channel should be enabled")
+	}
+}
+
+func TestIsChannelEnabledWithNoPreference(t *testing.T) {
+	s := setupTestStorage(t)
+	ctx := context.Background()
+
+	userID := "abcUser"
+	channel := "email"
+	enabled := true
+
+	isEnabled := s.IsChannelEnabled(ctx, 1, userID, channel)
+
+	if isEnabled != enabled {
+		t.Error("channel should be enabled")
+	}
+}
