@@ -69,3 +69,27 @@ func (s *PostgresStorage) ListAllTemp(ctx context.Context) ([]Template, error) {
 
 	return templates, nil
 }
+
+func (s *PostgresStorage) UpdateTemp(ctx context.Context, name string, subject string, body string, ID int) (*Template, error) {
+	sql := `UPDATE templates SET name = $1, subject = $2, body = $3, updated_at = NOW()
+	WHERE id = $4
+	RETURNING id, name, subject, body, created_at, updated_at`
+
+	temp := Template{}
+
+	err := s.pool.QueryRow(ctx, sql,
+		name,
+		subject,
+		body,
+		ID,
+	).Scan(
+		&temp.ID,
+		&temp.Name,
+		&temp.Subject,
+		&temp.Body,
+		&temp.CreatedAt,
+		&temp.UpdatedAt,
+	)
+
+	return &temp, err
+}
